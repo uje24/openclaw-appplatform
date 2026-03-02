@@ -10,17 +10,30 @@
         "enabled": true,
         "entries": {
             "whatsapp": {
-                "enabled": true
+                "enabled": false
             },
             "telegram": {
-                "enabled": true
+                "enabled": false
             },
             "signal": {
-                "enabled": true
+                "enabled": false
             },
             "discord": {
-                "enabled": true
+                "enabled": false
             }
+        }
+    },
+    "channels": {
+        "slack": {
+            "enabled": true,
+            "mode": "socket",
+            "appToken": "${SLACK_APP_TOKEN}",
+            "botToken": "${SLACK_BOT_TOKEN}",
+            "dmPolicy": "allowlist",
+            "allowedUsers": ["U0A3FSZ1VBK"],
+            "groupPolicy": "disabled",
+            "userTokenReadOnly": true,
+            "dangerouslyAllowNameMatching": false
         }
     },
     "models": {
