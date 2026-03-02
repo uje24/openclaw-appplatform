@@ -30,7 +30,7 @@
             "appToken": "${SLACK_APP_TOKEN}",
             "botToken": "${SLACK_BOT_TOKEN}",
             "dmPolicy": "allowlist",
-            "allowedUsers": ["U0A3FSZ1VBK"],
+            "allowFrom": ["U0A3FSZ1VBK"],
             "groupPolicy": "disabled",
             "userTokenReadOnly": true,
             "dangerouslyAllowNameMatching": false
