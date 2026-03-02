@@ -33,7 +33,7 @@ paths:
       - "*.sock"
 
 # Global settings
-backup_interval_seconds: 30 # 30 seconds
+backup_interval_seconds: 1800 # 30 minutes
 prune_interval_seconds: 3600 # 1 hour
 
 # Retention policy (for restic forget)
