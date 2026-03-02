@@ -108,6 +108,16 @@ fi
 echo "[generate-config] Adding gateway.auth.token to config"
 jq --arg token "$OPENCLAW_GATEWAY_TOKEN" '.gateway.auth.token = $token | .gateway.auth.mode = "token"' "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
 
+# Inject Slack tokens directly into config (SLACK_* vars are not OPENCLAW_-prefixed so won't auto-resolve)
+if [ -n "$SLACK_APP_TOKEN" ] && [ -n "$SLACK_BOT_TOKEN" ]; then
+  echo "[generate-config] Injecting Slack tokens into config"
+  jq --arg appToken "$SLACK_APP_TOKEN" --arg botToken "$SLACK_BOT_TOKEN" \
+    '.channels.slack.appToken = $appToken | .channels.slack.botToken = $botToken' \
+    "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
+else
+  echo "[generate-config] WARNING: SLACK_APP_TOKEN or SLACK_BOT_TOKEN not set — Slack will not connect"
+fi
+
 # Permissions applied via /etc/digitalocean/permissions.yaml
 
 echo "[generate-config] Final config:"
