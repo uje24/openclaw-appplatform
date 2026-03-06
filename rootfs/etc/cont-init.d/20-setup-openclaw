@@ -118,6 +118,30 @@ else
   echo "[generate-config] WARNING: SLACK_APP_TOKEN or SLACK_BOT_TOKEN not set — Slack will not connect"
 fi
 
+# Configure Anthropic auth (only on first boot - Spaces backup restores it on subsequent boots)
+AUTH_PROFILES="${OPENCLAW_STATE_DIR}/agents/main/agent/auth-profiles.json"
+if [ -n "$ANTHROPIC_API_KEY" ] && [ ! -f "$AUTH_PROFILES" ]; then
+  echo "[generate-config] Configuring Anthropic auth..."
+  mkdir -p "$(dirname "$AUTH_PROFILES")"
+  chown -R openclaw:openclaw "${OPENCLAW_STATE_DIR}/agents"
+  ONBOARD_SCRIPT="/tmp/openclaw-onboard.sh"
+  cat > "$ONBOARD_SCRIPT" << ONBOARD
+#!/bin/bash
+export OPENCLAW_STATE_DIR="${OPENCLAW_STATE_DIR}"
+export PATH="/home/openclaw/.local/share/pnpm:\$PATH"
+openclaw onboard --anthropic-api-key "${ANTHROPIC_API_KEY}"
+ONBOARD
+  chmod +x "$ONBOARD_SCRIPT"
+  su -s /bin/bash openclaw -c "$ONBOARD_SCRIPT" 2>&1 \
+    && echo "[generate-config] Anthropic auth configured" \
+    || echo "[generate-config] WARNING: Failed to configure Anthropic auth"
+  rm -f "$ONBOARD_SCRIPT"
+elif [ -f "$AUTH_PROFILES" ]; then
+  echo "[generate-config] Anthropic auth already configured"
+else
+  echo "[generate-config] WARNING: ANTHROPIC_API_KEY not set — Anthropic provider unavailable"
+fi
+
 # Permissions applied via /etc/digitalocean/permissions.yaml
 
 echo "[generate-config] Final config:"
