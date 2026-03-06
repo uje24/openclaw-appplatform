@@ -128,7 +128,10 @@ if [ -n "$ANTHROPIC_API_KEY" ] && [ ! -f "$AUTH_PROFILES" ]; then
   cat > "$ONBOARD_SCRIPT" << ONBOARD
 #!/bin/bash
 export OPENCLAW_STATE_DIR="${OPENCLAW_STATE_DIR}"
-export PATH="/home/openclaw/.local/share/pnpm:\$PATH"
+export NVM_DIR="/home/openclaw/.nvm"
+[ -s "\$NVM_DIR/nvm.sh" ] && . "\$NVM_DIR/nvm.sh"
+export PNPM_HOME="/home/openclaw/.local/share/pnpm"
+export PATH="\$PNPM_HOME:\$PATH"
 openclaw onboard --anthropic-api-key "${ANTHROPIC_API_KEY}"
 ONBOARD
   chmod +x "$ONBOARD_SCRIPT"
